@@ -1,2 +1,31 @@
 https://crates.io/crates/compiler_builtins
 If you are working with a target that doesn't have binary releases of std available via rustup (this probably means you are building the core crate yourself) and need compiler-rt intrinsics (i.e. you are probably getting linker errors when building an executable: undefined reference to __aeabi_memcpy), you can use this crate to get those intrinsics and solve the linker errors. To do that, add this crate somewhere in the dependency graph of the crate you are building
+
+
+
+
+If anyone else wants to use GnuPG for Windows...
+VSCode does NOT like that. 
+
+There's very, very sparse info. Everyone just says to use Git for Windows. 
+
+So...
+---
+[gpg]
+    program = "C:/Program Files (x86)/GnuPG/bin/gpg.exe"
+        
+[user]
+	name = Your Name
+	email = youremail@noreply.github.com
+	signingkey = yourlongkey
+
+[credential]
+          helper = "C:/Program Files (x86)/GnuPG/bin/gpg-agent.exe"
+          helper = gpg-agent.exe
+---
+
+No matter how you order paths, gpg finds the one in Git for Windows when launched from vscode, unless gitconfig supplies the full path. 
+
+Further, it has no earthly idea what gpg-agent is. 
+
+These were the changes that finally got it working for me.
