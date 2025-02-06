@@ -1,8 +1,4 @@
 [build]
-    jobs         = 1                 # number of parallel jobs, defaults to # of CPUs
-    rustc        = "rustc"           # the rust compiler tool - I intend to use extern C's
-    rustdoc      = "rustdoc"         # the doc generator tool
-    target-dir   = "compiled"        # path of where to place all generated artifacts
-    rustflags    = ["-Z", "mut_ref"] # custom flags to pass to all compiler invocations
-    rustdocflags = []                # custom flags to pass to rustdoc
-    profile      = "release"         # the profile to use for all compiler invocations
+    jobs      = 1                 # number of parallel jobs, defaults to # of CPUs
+    rustc     = "rustc"           # the rust compiler tool - I intend to use extern C's
+    rustflags = ["-Z", "mut_ref"] # custom flags to pass to all compiler invocations
