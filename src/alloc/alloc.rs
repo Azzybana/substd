@@ -5,15 +5,15 @@
 //! It's not meant to produce debug info or care about safety checks otherwise.
 //! Speed, Safety, Resource usage... pick 2.
 
-use core::{ ptr::null_mut, mem::size_of };
+use core::{mem::size_of, ptr::null_mut};
 
-#[cfg(target_arch = "x86_64")]
-use core::arch::x86_64::{ __cpuid, __cpuid_count };
 #[cfg(target_arch = "x86")]
-use core::arch::x86::{ __cpuid, __cpuid_count };
-use libc::{ mmap, PROT_READ, PROT_WRITE, MAP_PRIVATE, MAP_ANONYMOUS };
+use core::arch::x86::{__cpuid, __cpuid_count};
+#[cfg(target_arch = "x86_64")]
+use core::arch::x86_64::{__cpuid, __cpuid_count};
+use libc::{mmap, MAP_ANONYMOUS, MAP_PRIVATE, PROT_READ, PROT_WRITE};
 use winapi::um::memoryapi::VirtualAlloc;
-use winapi::um::winnt::{ MEM_COMMIT, MEM_RESERVE, PAGE_READWRITE };
+use winapi::um::winnt::{MEM_COMMIT, MEM_RESERVE, PAGE_READWRITE};
 
 // Macros for SIMD detection
 #[macro_export]
@@ -50,7 +50,7 @@ macro_rules! any_avx_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        any(target_feature = "avx", target_feature = "avx2"), 
+                        any(target_feature = "avx", target_feature = "avx2"),
                         not(target_feature = "avx512f")
                 )
             )
@@ -65,7 +65,7 @@ macro_rules! avx2_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "avx2", 
+                        target_feature = "avx2",
                         not(target_feature = "avx512f")
                 )
             )
@@ -80,7 +80,7 @@ macro_rules! avx_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "avx", 
+                        target_feature = "avx",
                         not(target_feature = "avx512f", target_feature = "avx2")
                 )
             )
@@ -95,8 +95,8 @@ macro_rules! any_sse_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",)
                 )
@@ -112,8 +112,8 @@ macro_rules! sse42_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse4.2", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse4.2",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",)
                 )
@@ -129,8 +129,8 @@ macro_rules! sse41_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse4.1", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse4.1",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",
                             target_feature = "sse4.2",)
@@ -147,8 +147,8 @@ macro_rules! sse3_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse3", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse3",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",
                             target_feature = "sse4.2",
@@ -167,8 +167,8 @@ macro_rules! sse2_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse2", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse2",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",
                             target_feature = "sse4.2",
@@ -186,8 +186,8 @@ macro_rules! sse_support {
             all(
                 any(target_arch = "x86_64", target_arch = "x86"),
                 all(
-                        target_feature = "sse", 
-                        not(target_feature = "avx512f", 
+                        target_feature = "sse",
+                        not(target_feature = "avx512f",
                             target_feature = "avx2",
                             target_feature = "avx",
                             target_feature = "sse4.2",
@@ -226,17 +226,17 @@ avx512_support!();
 #[derive(Copy, Clone)]
 pub struct CacheInfo {
     // Hot 32-byte block (AVX-256 aligned)
-    pub cache_size: u32, // +0  (4-byte aligned)
+    pub cache_size: u32,    // +0  (4-byte aligned)
     pub prefetch_size: u16, // +4  (2-byte aligned)
-    pub line_size: u8, // +6
-    _padding1: u8, // +7  (maintain 8-byte alignment)
+    pub line_size: u8,      // +6
+    _padding1: u8,          // +7  (maintain 8-byte alignment)
 
     // Cold 32-byte block
-    pub cache_sets: u16, // +8  (2-byte aligned)
+    pub cache_sets: u16,   // +8  (2-byte aligned)
     pub associativity: u8, // +10
-    pub cache_level: u8, // +11
-    pub shared_cores: u8, // +12
-    _padding2: [u8; 19], // +13-31 (pad to 32 bytes)
+    pub cache_level: u8,   // +11
+    pub shared_cores: u8,  // +12
+    _padding2: [u8; 19],   // +13-31 (pad to 32 bytes)
 
     // Ensure 64-byte total size
     _padding3: [u8; 32], // +32-63 (pad to 64 bytes)
@@ -246,14 +246,14 @@ any_avx_support!();
 #[derive(Copy, Clone)]
 pub struct CacheInfo {
     // Hot 16-byte block
-    pub cache_size: u32, // +0  (4-byte aligned)
+    pub cache_size: u32,    // +0  (4-byte aligned)
     pub prefetch_size: u16, // +4  (2-byte aligned)
-    pub line_size: u8, // +6
-    pub cache_level: u8, // +7
-    pub cache_sets: u16, // +8  (2-byte aligned)
-    pub associativity: u8, // +10
-    pub shared_cores: u8, // +11
-    _padding1: [u8; 4], // +12-15 (align to 16)
+    pub line_size: u8,      // +6
+    pub cache_level: u8,    // +7
+    pub cache_sets: u16,    // +8  (2-byte aligned)
+    pub associativity: u8,  // +10
+    pub shared_cores: u8,   // +11
+    _padding1: [u8; 4],     // +12-15 (align to 16)
 
     // Cold 16-byte block
     _padding2: [u8; 16], // +16-31 (pad to 32 bytes)
@@ -263,16 +263,16 @@ any_sse_support!();
 #[derive(Copy, Clone)]
 pub struct CacheInfo {
     // Hot 8-byte block (First XMM half)
-    pub cache_size: u32, // +0  (4-byte aligned)
+    pub cache_size: u32,    // +0  (4-byte aligned)
     pub prefetch_size: u16, // +4  (2-byte aligned)
-    pub line_size: u8, // +6
-    pub cache_level: u8, // +7
+    pub line_size: u8,      // +6
+    pub cache_level: u8,    // +7
 
     // Cold 8-byte block (Second XMM half)
-    pub cache_sets: u16, // +8  (2-byte aligned)
+    pub cache_sets: u16,   // +8  (2-byte aligned)
     pub associativity: u8, // +10
-    pub shared_cores: u8, // +11
-    _padding: [u8; 4], // +12-15 (align to 16)
+    pub shared_cores: u8,  // +11
+    _padding: [u8; 4],     // +12-15 (align to 16)
 }
 
 no_simd_support!();
@@ -284,14 +284,14 @@ pub struct CacheInfo {
 
     // Medium 2-byte block
     pub prefetch_size: u16, // +4  (2-byte aligned)
-    pub cache_sets: u16, // +6  (2-byte aligned)
+    pub cache_sets: u16,    // +6  (2-byte aligned)
 
     // Cold 1-byte fields + padding
-    pub line_size: u8, // +8
-    pub cache_level: u8, // +9
+    pub line_size: u8,     // +8
+    pub cache_level: u8,   // +9
     pub associativity: u8, // +10
-    pub shared_cores: u8, // +11
-    _padding: [u8; 4], // +12-15 (align to 8)
+    pub shared_cores: u8,  // +11
+    _padding: [u8; 4],     // +12-15 (align to 8)
 }
 
 impl CacheInfo {
@@ -398,7 +398,7 @@ pub struct Allocator {
     // Cache specifics - modern CPUs typically < 1MB L1
     cache_info: CacheInfo,
     l1_cache_size: u16, // 64KB is common for L1
-    prefetch_size: u8, // 256 bytes max is typical
+    prefetch_size: u8,  // 256 bytes max is typical
 
     // Adding a MemoryMap via slices, since I like pi, lol
     mem_map: MemoryMap,
@@ -413,7 +413,7 @@ pub struct Allocator {
     chunk_mask: usize, // Must match pointer size
 
     // Limits
-    max_bytes: usize, // 4GB total is reasonable
+    max_bytes: usize,  // 4GB total is reasonable
     free_bytes: usize, // Track against max_bytes
     used_bytes: usize, // Track against max_bytes
 }
@@ -466,7 +466,7 @@ impl Allocator {
             // Allocate new chunk if needed
             self.current_chunk = unsafe {
                 core::alloc::alloc_zeroed(
-                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
                 )
             };
             if self.current_chunk.is_null() {
@@ -497,7 +497,7 @@ impl Allocator {
             // Allocate new chunk if needed
             self.current_chunk = unsafe {
                 core::alloc::alloc_zeroed(
-                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
                 )
             };
             self.current_offset = 0;
@@ -515,7 +515,7 @@ impl Allocator {
         unsafe {
             core::alloc::dealloc(
                 ptr,
-                core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
             );
         }
     }
@@ -535,7 +535,7 @@ impl Allocator {
             unsafe {
                 core::alloc::dealloc(
                     self.current_chunk,
-                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
                 );
             }
             self.current_chunk = null_mut();
@@ -564,7 +564,7 @@ impl Allocator {
             // Allocate new chunk if needed
             self.current_chunk = unsafe {
                 core::alloc::alloc_zeroed(
-                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                    core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
                 )
             };
             self.current_offset = 0;
@@ -579,7 +579,7 @@ impl Allocator {
             core::ptr::copy_nonoverlapping(ptr, new_ptr, aligned_size);
             core::alloc::dealloc(
                 ptr,
-                core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap()
+                core::alloc::Layout::from_size_align(self.chunk_size as usize, 1).unwrap(),
             );
         }
 

@@ -1,0 +1,2 @@
+https://crates.io/crates/compiler_builtins
+If you are working with a target that doesn't have binary releases of std available via rustup (this probably means you are building the core crate yourself) and need compiler-rt intrinsics (i.e. you are probably getting linker errors when building an executable: undefined reference to __aeabi_memcpy), you can use this crate to get those intrinsics and solve the linker errors. To do that, add this crate somewhere in the dependency graph of the crate you are building
