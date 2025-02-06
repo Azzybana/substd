@@ -14,6 +14,7 @@ cargo-features = ["test-dummy-unstable"]
     im-a-teapot  = false # Cannot yet brew tea                                                                  # I will eventually make tea
     keywords      = ["no_std", "embedded", "library", "memory", "vector"] 
     categories    = ["no-std", "hardware-support", "memory-management", "no-std::no-alloc", "development-tools"]
+    exclude       = ["src/bin/*"]
 
     [package.metadata]
         no-std = true
