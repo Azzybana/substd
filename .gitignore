@@ -1,0 +1,32 @@
+# Binaries
+/target
+**/*.rs.bk
+
+# Build artifacts
+*.rlib
+*.d
+
+# Intermediate files
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Cargo
+Cargo.lock
+
+# IDEs and editors
+.idea/
+.vscode/
+.github/
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.log
+
+# Other
+.DS_Store
+Thumbs.db

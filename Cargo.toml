@@ -1,0 +1,65 @@
+[package]
+
+    name         = "substd"
+    description  = "An unstable replacement for std and core modules with a focus on speed over safety."
+    version      = "0.0.1"
+    edition      = "2024"
+    rust-version = "1.85.0"
+    license      = "Apache-2.0"
+    authors      = ["Azzybana Raccoon <121582001+Azzybana@users.noreply.github.com>"]
+    readme       = "README.md"
+    resolver     = "3" # Requires Rust 1.84+
+    im-a-teapot  = false # Cannot yet brew tea                                                                  # I will eventually make tea
+    publish      = false
+    keywords      = ["no_std", "embedded", "library", "memory", "vector"] 
+    categories    = ["no-std", "hardware-support", "memory-management", "no-std::no-alloc", "development-tools"]
+
+    [package.metadata]
+        no-std = true
+
+[features]
+    default = []
+
+[future-incompat-report]
+    frequency = "always"
+
+[workspace]
+
+[lib]
+    name       = "substd"
+    path = "src/lib.rs"
+    crate-type = ["rlib", "cdylib", "staticlib"]
+    edition = "2024"
+
+[profile.dev]
+    opt-level          = 3         # Maximum speed
+    debug              = false     # Disable debug info
+    lto                = "fat"     # Link Time Optimization
+    codegen-units      = 1         # Fewer codegen units for better optimization
+    panic              = 'abort'   # Faster panics
+    incremental        = false     # Disable incremental compilation
+    overflow-checks    = false     # Disable overflow checks for better performance
+    inline-threshold   = 1000      # Aggressive inlining
+    unroll-loops       = true      # Enable loop unrolling
+    optimize-attribute = "inline"  # Aggressively inline functions
+    strip              = "symbols" # Strip symbols to reduce binary size
+    rpath              = false     # Disable runtime path
+    debug-assertions   = false     # Disable debug assertions
+    target-cpu         = "native"  # Optimize for the CPU on which it is being compiled
+
+[profile.release]
+    opt-level          = 3         # Maximum speed
+    debug              = false     # Disable debug info  
+    lto                = "fat"     # Link Time Optimization
+    codegen-units      = 1         # Fewer codegen units for better optimization
+    panic              = 'abort'   # Faster panics
+    incremental        = false     # Disable incremental compilation
+    overflow-checks    = false     # Disable overflow checks for better performance
+    inline-threshold   = 1000      # Aggressive inlining
+    unroll-loops       = true      # Enable loop unrolling
+    optimize-attribute = "inline"  # Aggressively inline functions
+    strip              = "symbols" # Strip symbols to reduce binary size
+    rpath              = false     # Disable runtime path
+    debug-assertions   = false     # Disable debug assertions
+    target-cpu         = "native"  # Optimize for the CPU on which it is being compiled
+
