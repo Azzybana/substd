@@ -2,9 +2,7 @@ use core::panic::PanicInfo;
 
 #[panic_handler]
 fn explode(info: &PanicInfo) -> ! {
-    // Prefix the panic message with "_"
-    let message = format!("_{}", info);
-    // Call abort to halt execution
+    let _message = format!("{}", info);
     core::intrinsics::abort()
 }
 
