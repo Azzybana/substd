@@ -1,8 +1,7 @@
 use core::panic::PanicInfo;
 
 #[panic_handler]
-fn explode(info: &PanicInfo) -> ! {
-    let _message = format!("{}", info);
+fn explode() -> ! {
     core::intrinsics::abort()
 }
 
