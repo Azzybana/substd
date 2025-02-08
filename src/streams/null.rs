@@ -13,12 +13,12 @@ impl NullStream {
 
 impl Read for NullStream {
     /// Ignores the input argument and returns no data.
-    fn read_str<T>(&self, _arg: T) -> Option<String> {
+    fn read_str<T>(&self, _arg: T) -> Option<T> {
         None
     }
 }
 
 impl Write for NullStream {
-    /// Ignores the string input and simulates a successful write.
+    /// Ignores the input and simulates a successful write.
     fn write_str(&mut self, _arg: &T) {}
 }
