@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            @font-face {
+                font-family: "OpenDyslexic";
+                src: url("https://github.com/antijingoist/opendyslexic/raw/refs/heads/master/compiled/OpenDyslexic-Regular.otf");
+                font-style: normal;
+                font-weight: normal;
+            }
+
+            @font-face {
+                font-family: "OpenDyslexic";
+                src: url("https://github.com/antijingoist/opendyslexic/raw/refs/heads/master/compiled/OpenDyslexic-Italic.otf");
+                font-style: italic;
+                font-weight: normal;
+            }
+
+            @font-face {
+                font-family: "OpenDyslexic";
+                src: url("https://github.com/antijingoist/opendyslexic/raw/refs/heads/master/compiled/OpenDyslexic-Bold.otf");
+                font-weight: bold;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: "OpenDyslexic";
+                src: url("https://github.com/antijingoist/opendyslexic/raw/refs/heads/master/compiled/OpenDyslexic-Bold-Italic.otf");
+                font-weight: bold;
+                font-style: italic;
+            }
+
+            :root {
+                --background-color: black;
+                --font-face: OpenDyslexic, Slyexiad, Recursive, Moderne Sans,
+                    Myriad Pro, Arial, sans-serif !important;
+                --font-size: 1.2em;
+                --header-size: 1.8em;
+                --subheader-size: 1.5em;
+                --gutter-size: 2vw;
+                --text-color: white;
+                --p-height: 100%;
+                --p-opacity: 1%;
+                --animation-duration: 13s;
+                --offset: -66vw;
+                --blur: 11vw;
+                --spread: 50vw;
+                --red: var(--offset) 0 var(--blur) var(--spread) red;
+                --orange: var(--offset) 0 var(--blur) var(--spread) orange;
+                --yellow: var(--offset) 0 var(--blur) var(--spread) yellow;
+                --green: var(--offset) 0 var(--blur) var(--spread) limegreen;
+                --blue: var(--offset) 0 var(--blur) var(--spread) aqua;
+                --violet: var(--offset) 0 var(--blur) var(--spread) violet;
+            }
+
+            @keyframes slide {
+                0% {
+                    left: var(--offset);
+                }
+                100% {
+                    left: calc(100vw + (-2 * var(--offset)));
+                }
+            }
+
+            body {
+                overflow: hidden;
+                font-family: var(--font-face);
+                font-size: var(--font-size);
+                color: var(--text-color);
+                background-color: var(--background-color);
+                margin-left: var(--offset);
+            }
+
+            .p {
+                height: var(--p-height);
+                width: 0;
+                top: 0;
+                left: var(--offset);
+                position: absolute;
+                transform: rotate(-45deg);
+                transform-origin: top left;
+                opacity: var(--p-opacity);
+                animation: var(--animation-duration) linear infinite slide;
+            }
+
+            .p:nth-child(1) {
+                box-shadow: var(--red), var(--blue), var(--green);
+                animation-delay: 0s;
+            }
+
+            .p:nth-child(2) {
+                box-shadow: var(--orange), var(--violet), var(--blue);
+                animation-delay: 1.1s;
+            }
+
+            .p:nth-child(3) {
+                box-shadow: var(--yellow), var(--red), var(--violet);
+                animation-delay: 2.2s;
+            }
+
+            .p:nth-child(4) {
+                box-shadow: var(--green), var(--orange), var(--red);
+                animation-delay: 3.3s;
+            }
+
+            .p:nth-child(5) {
+                box-shadow: var(--blue), var(--yellow), var(--orange);
+                animation-delay: 4.4s;
+            }
+
+            .p:nth-child(6) {
+                box-shadow: var(--violet), var(--green), var(--yellow);
+                animation-delay: 5.5s;
+            }
+
+            .p:nth-child(7) {
+                box-shadow: var(--red), var(--blue), var(--green);
+                animation-delay: 6.6s;
+            }
+
+            .p:nth-child(8) {
+                box-shadow: var(--orange), var(--violet), var(--blue);
+                animation-delay: 7.7s;
+            }
+
+            .p:nth-child(9) {
+                box-shadow: var(--yellow), var(--red), var(--violet);
+                animation-delay: 8.8s;
+            }
+
+            .p:nth-child(10) {
+                box-shadow: var(--green), var(--orange), var(--red);
+                animation-delay: 9.9s;
+            }
+
+            .p:nth-child(11) {
+                box-shadow: var(--blue), var(--yellow), var(--orange);
+                animation-delay: 11s;
+            }
+
+            .p:nth-child(12) {
+                box-shadow: var(--violet), var(--green), var(--yellow);
+                animation-delay: 11.1s;
+            }
+
+            .header {
+                position: absolute;
+                top: var(--gutter-size);
+                left: var(--gutter-size);
+                font-size: var(--header-size);
+            }
+
+            .dashboard {
+                position: absolute;
+                top: calc(var(--gutter-size) * 2 + var(--header-size));
+                left: var(--gutter-size);
+                width: calc(100vw - (var(--gutter-size) * 2));
+                height: calc(
+                    100vh - (var(--gutter-size) * 3 + var(--header-size))
+                );
+                background-color: var(--background-color);
+                opacity: 0.8;
+                border-radius: 3vw;
+                z-index: 1;
+            }
+
+            .content {
+                position: absolute;
+                top: calc(var(--gutter-size) * 2);
+                left: calc(var(--gutter-size) * 2);
+                width: calc(100% - (var(--gutter-size) * 4));
+                height: calc(100% - (var(--gutter-size) * 4));
+                overflow: hidden;
+            }
+        </style>
+        <title>p Animation</title>
+    </head>
+    <body>
+        <div class="header">substd</div>
+        <div class="dashboard">
+            <div class="content">
+                <content>
+                    <h2>Welcome to <i>unsafe as a feature!</i></h2>
+                    <p>
+                        I've had several people approach me, when I'm asking
+                        'stupid questions' and they all tell me what I want to
+                        do is not how Rust works. I don't buy that. Not for a
+                        minute. I like to play with microcontrollers. I have
+                        arm, aarch64, pic, pic32, and a few other devices. The
+                        orangepi has an onboard neural processor, and I really
+                        dislike using 'their' sofware to use it. I am new to
+                        Rust. I trusted my own C alloc and dealloc so much, it
+                        took years to come to grips with 'garbage collectors'
+                        when they added a plus. The one thing lacking from
+                        no-std is std. That's more profound a statement than you
+                        may think. I've been around the block once or twice, I'm
+                        not afraid of extern calls. I know how to use symbol
+                        servers. I'm not wanting to pull in the ENTIRE windows
+                        API though, way too much overhead. Also, every crate
+                        that does, adds it's own cpu cycles to the mess.
+                    </p>
+                    <p>
+                        I am looking to achieve the most stripped down,
+                        simplistic, bare, using-my-own-externs when I need to,
+                        calls. All compile time gated. No extra features you
+                        don't need, no extra cycles coming from the library
+                        between arches. It's about as close to bare metal as
+                        you're going to get on things above microcontrollers.
+                    </p>
+                    <p>
+                        When you're writing an allocator for a pic32 controller,
+                        and want the same code to work on a x86_64, exactly as
+                        written, there is no longer a promise of safety. It does
+                        mean reproducability. It also means speed.
+                    </p>
+                    <p>
+                        If the allocator knows how much space is left, you can
+                        reference for zero cost, prior to calling for allocation
+                        and comparing, more cheaply than the allocator can
+                        handle an error in alocation. The code works, and can
+                        work safely, if you handle the data like you would a
+                        microcontroller and do most of it yourself.
+                    </p>
+                    <p>
+                        Seriously, with the safety checks you can fit on a 16bit
+                        PIC controller, and hand that same instruction set to a
+                        modern CPU... be prepared for blazingly fast unsafety.
+                    </p>
+                    <h2>Status</h2>
+                    <p>
+                        Presently still scaffolding things. Stuff is changing.
+                        I'm still mapping interesting externs. Haven't even
+                        broken out the linux box yet. Yes, I've asked AI to
+                        scaffold a few things. It gives me keywords, and I
+                        rewrite it better. Worst junior dev ever, but at least
+                        knows the glossary of modern terms, lol. Once I'm able
+                        to handle basics on windows in no-std, I'll likely start
+                        working on my linux machine next. However, after console
+                        api, it can also flash an LED with morse code as string
+                        out. Bare metal is QUITE flexible. :)
+                    </p>
+                    <h2>Docs</h2>
+                    <p>
+                        I'm not 100% on direction for things yet, forethcoming.
+                    </p>
+                </content>
+            </div>
+        </div>
+
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+        <div class="p"></div>
+    </body>
+</html>
