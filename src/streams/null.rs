@@ -20,7 +20,5 @@ impl Read for NullStream {
 
 impl Write for NullStream {
     /// Ignores the string input and simulates a successful write.
-    fn write_str(&mut self, _s: &str) -> fmt::Result {
-        Ok(())
-    }
+    fn write_str(&mut self, _arg: &T) {}
 }
