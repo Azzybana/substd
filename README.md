@@ -1,8 +1,12 @@
-# 🌺 SubStd: High-Performance Core Replacement Library 🌺
-
 ## ⚠️ **WARNING: This Library is UNSAFE BY DESIGN** ⚠️
 
-Welcome to SubStd - an experimental, performance-focused alternative implementation of Rust's std/core modules. This library prioritizes raw speed over safety guarantees! 🏃‍♀️💨
+# 🌺 SubStd 🌺
+
+*High-Performance Core Replacement Library*
+
+Welcome to SubStd - an experimental, performance-focused alternative implementation of Rust's std/core modules. This library prioritizes raw speed over safety guarantees!
+
+It does not meet typical Rust promises of safety, so is a little sub-standard.
 
 ## 💫 Overview
 
@@ -12,6 +16,8 @@ SubStd provides blazing-fast alternatives to common std/core functionality by:
 -   Using unsafe optimizations aggressively
 -   Providing zero-cost abstractions
 -   Minimizing memory operations
+-   Work around additional checks with it's own calls to externs.
+-   Performs a valid action or aborts the process
 
 ## 🎯 Goals
 
@@ -27,21 +33,25 @@ SubStd provides blazing-fast alternatives to common std/core functionality by:
 -   SIMD-accelerated algorithms
 -   Zero-allocation APIs where possible
 -   Platform-specific assembly optimizations
+-   Dumb enough to do what you tell it
 -   Smart enough to tell you what caused panic in production
 
 ## 🗺️ Roadmap
 
+### Future Goals
+
+-   Since I'm still scaffolding, placed the first 2 stream handlers
+-   Using kernel32, a console handler on windows
+-   Using a boolean reference, and a static table, print to an led in morse code
+-   This isn't a mistake
+-   Part of the beauty of a rudimentary, fast, simple design is dexterity
+
 ### Phase 1
 
--   [ ] Core data structures
--   [ ] Basic collections
--   [ ] Memory management primitives
-
-### Phase 2\*\*
-
--   [ ] Advanced collections
--   [ ] Async runtime
--   [ ] Platform-specific optimizations
+-   Really, I'm still laying all the groundwork
+-   Yes, I'm using AI to help with some of the scaffolding
+-   No, I don't trust AI to get it right when you're working this unsafely
+-   Everything it writes simply gives me keywords to narrow down docs and do it my way quickly
 
 ## ⚡️ Performance
 
