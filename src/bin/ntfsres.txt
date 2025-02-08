@@ -1,0 +1,27 @@
+PE Analysis for 'C:\Windows\System32\ntfsres.dll'
+============================
+
+DOS Header:
+  e_lfanew: 0xB0
+
+NT Header Signature: PE\0\0
+
+File Header:
+  machine: 0x8664
+  number_of_sections: 2
+  time_date_stamp: 0xF6760C9B
+  size_of_optional_header: 240
+
+Section Headers:
+  Section 0: <invalid>  VA: 0x40000  Size: 0x0
+  Section 1:           VA: 0x0  Size: 0x0
+
+Imports:
+  DLL name RVA: 0xD
+  time_date_stamp: 0xF6760C9B
+  forwarder_chain: 0x0
+  first_thunk: 0x6C
+  DLL name RVA: 0xFFFF
+  time_date_stamp: 0x3
+  forwarder_chain: 0x4
+  first_thunk: 0xB8
