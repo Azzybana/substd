@@ -1,4 +1,5 @@
-use crate::streams::strings::StringStream;
+use crate::streams::_buffer::Buffer;
+use crate::streams::strings::StringStream; // new import
 
 /// A minimal Stdin supporting blocking/non-blocking reads and signal handling.
 pub struct Stdin {
@@ -32,5 +33,13 @@ impl Stdin {
     /// Dummy implementation for a no-std environment.
     pub fn handle_signal(&self) {
         // No-op in minimal implementation.
+    }
+}
+
+// Implement Buffer for Stdin.
+impl Buffer for Stdin {
+    type Item = String;
+    fn into_buffer(self) -> Vec<Self::Item> {
+        vec![self.inner.buffer]
     }
 }
